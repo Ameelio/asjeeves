@@ -1,0 +1,36 @@
+[package]
+name = "asjeeves-csrf"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+# #########################################
+# Middleware - axum
+# This crate is for middleware used by Axum
+# #########################################
+axum.workspace = true
+axum-extra.workspace = true
+cookie.workspace = true
+
+# #########################################
+# Format conversion
+# base64ct - constant time encoding and decoding to base64.
+# #########################################
+base64ct.workspace = true
+
+# #########################################
+# Secure Randomization
+# #########################################
+rand_chacha.workspace = true
+rand_core.workspace = true
+
+# #########################################
+# Instrumentation and Logging
+# #########################################
+tracing.workspace = true
+
+[dev-dependencies]
+axum-test = { version = "18.0" }
+tokio = { version = "1.48.0", features = ["test-util"] }
+

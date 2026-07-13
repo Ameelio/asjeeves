@@ -1,0 +1,136 @@
+[workspace]
+members = [
+  "asjeeves",
+  "asjeeves-csrf",
+  "asjeeves-dup-req-protection",
+  "asjeeves-encryption",
+  "asjeeves-health-check",
+  "asjeeves-jwks-service",
+  "asjeeves-telemetry",
+  "asjeeves-user-session"
+]
+resolver = "3"
+
+[workspace.dependencies]
+
+# #########################################
+# AES Security algorithm
+# Used for: Key Encryption Key
+# #########################################
+aes-gcm = { version = "0.10.3", features = ["std"] }
+
+# #########################################
+# HTTP Framework — Axum
+# #########################################
+axum = { version = "0.8.4", features = ["macros"] }
+axum-extra = { version = "0.12", features = ["cookie"] }
+
+# #########################################
+# base64ct - continuous time encoding/decoding base64.
+# Used for: csrf tokens, json web signatures.
+# #########################################
+base64ct = { version = "1.8.0", features = ["alloc"]}
+
+# #########################################
+# Efficient binary data handler.
+# Used for: http web services (tower)
+# #########################################
+bytes = "1.12.1"
+
+# #########################################
+# chrono handles datetime and timezones.
+# #########################################
+chrono = "0.4.42"
+
+# #########################################
+# handles http cookies.
+# Used for: csrf cookies
+# #########################################
+cookie = "0.18.1"
+
+# #########################################
+# Core HTTP library used by reqwest, axum, tower
+# explicitly included for reqwest-tracing to
+# function.
+# Also used for http web services (tower)
+# #########################################
+http = "1.4.0"
+http-body-util = "0.1.4"
+
+# #########################################
+# Our own crate that provides the structure
+# and conversions to JWS objects per the IETF
+# spec.
+# #########################################
+json_web_key = { git = "https://github.com/Ameelio/json_web_key.git", rev = "732da090b7b77d1cf900c69e5b9cac41d1ad25d2" }
+
+# #########################################
+# Randomization - ChaCha 20
+# Used for: CSRF cookies, Duplication
+#   Protection, RSA Keys
+# #########################################
+rand_chacha = "0.3"
+rand_core = "0.6"
+
+# #########################################
+# Cache used for user sessions and csrf tokens
+# #########################################
+redis = { version = "1.0.3", features = ["aio","connection-manager", "tokio-rustls-comp", "tls-rustls"] }
+
+# #########################################
+# HTTP Client — Reqwest
+# #########################################
+reqwest = { version = "0.13.1", default-features = false, features = ["charset", "form", "hickory-dns", "http2", "json", "rustls"] }
+reqwest-middleware = "0.5.2"
+reqwest-tracing = "0.7.1"
+
+# #########################################
+# RSA / SHA 256 Algorithm
+# Used for: Json Web Keys and Tokens
+# #########################################
+rsa = { version = "0.9", features = ["sha2"] }
+
+# #########################################
+# Format conversion
+# serde (ser)ializes and (de)serializes structs.
+# #########################################
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.141"
+serde_jwt = { git = "https://github.com/Ameelio/serde_jwt.git", rev = "77ddce62a089ecf880908c591d92023dc0e2b888", features = ["debug"]}
+
+# #########################################
+# Provides derive(Error) which makes for cleaner
+# code when defining errors.
+# #########################################
+thiserror = "2.0.18"
+
+# #########################################
+# gRPC Framework
+# #########################################
+tonic = "0.14.2"
+
+# #########################################
+# Tower is used for lower level service creation.
+# #########################################
+tower = "0.5.3"
+
+# #########################################
+# Instrumentation and Logging
+# #########################################
+tracing = "0.1"
+
+# #########################################
+# UUID V7 unique identifier generation
+# Used for: Json Web Tokens
+# #########################################
+uuid = { version = "1.22.0", features = ["v7"] }
+
+# #########################################
+# zero out data when out of scope.
+# #########################################
+zeroize = { version = "1.8.2", features = ["serde"] }
+
+# #########################################
+# Internal subcrates
+# #########################################
+asjeeves-encryption = { path = "./asjeeves-encryption" }

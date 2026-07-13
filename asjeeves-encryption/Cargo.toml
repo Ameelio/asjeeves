@@ -1,0 +1,48 @@
+[package]
+name = "asjeeves-encryption"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+# Deserialization
+serde.workspace = true
+
+# Ensure all bytes are zeroed when garbage collected.
+zeroize.workspace = true
+
+# #########################################################
+# Key Encryption Key
+# Algorithm: AES
+# Can be deserialized from a base64 unpadded encoded string.
+# #########################################################
+aes-gcm.workspace = true
+base64ct.workspace = true
+
+# #########################################################
+# Json Web Keys
+# Algorithm: RSA, SHA 256
+# #########################################################
+json_web_key.workspace = true
+rsa.workspace = true
+serde_json.workspace = true
+serde_jwt.workspace = true
+
+# #########################################################
+# Random Generation
+# Algorithm: ChaCha 20, UUID V7
+# #########################################################
+rand_chacha.workspace = true
+rand_core.workspace = true
+uuid.workspace = true
+
+# #########################################################
+# Session Cookies
+# #########################################################
+cookie.workspace = true
+
+# #########################################################
+# Instrumentation & Errors
+# #########################################################
+thiserror.workspace = true
+tracing.workspace = true

@@ -1,0 +1,15 @@
+[package]
+name = "asjeeves-dup-req-protection"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+redis.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+redis-test = { version = "1.0.1", features = ["aio"] }
+tokio = { version = "1", features = ["macros", "rt"]}
+tokio-test = "0.4.4"
+

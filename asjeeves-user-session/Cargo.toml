@@ -1,0 +1,36 @@
+[package]
+name = "asjeeves-user-session"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+# Store the session in redis.
+redis = { workspace = true, features = ["json"] }
+
+# Convert whatever session structure the client has into Json
+serde.workspace = true
+serde_json.workspace = true
+
+# Handles expiration ttl.
+chrono.workspace = true
+
+# Integrate with axum http framework
+axum.workspace = true
+
+# Signed cookies for user sessions
+axum-extra.workspace = true
+cookie.workspace = true
+asjeeves-encryption.workspace = true
+
+# Error Handling
+thiserror.workspace = true
+
+# Logging and Instrumentation
+tracing.workspace = true
+tower.workspace = true
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt", "rt-multi-thread"]}
+tokio-test = "0.4.5"
+axum-test = "18.7.0"
