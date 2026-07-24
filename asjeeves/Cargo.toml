@@ -1,6 +1,6 @@
 [package]
 name = "asjeeves"
-version = "0.1.2-alpha.1"
+version = "0.1.2-alpha.2"
 edition = "2024"
 
 [features]
@@ -39,6 +39,8 @@ tower = [
   "telemetry"
 ]
 
+zipstream = [ "dep:asjeeves-zipstream"]
+
 [dependencies]
 asjeeves-csrf = { path = "../asjeeves-csrf", optional = true }
 asjeeves-dup-req-protection = { path = "../asjeeves-dup-req-protection", optional = true }
@@ -47,3 +49,4 @@ asjeeves-health-check = { path = "../asjeeves-health-check", optional = true }
 asjeeves-jwks-service = { path = "../asjeeves-jwks-service", optional = true }
 asjeeves-telemetry = { path = "../asjeeves-telemetry", optional = true }
 asjeeves-user-session = { path = "../asjeeves-user-session", optional = true }
+asjeeves-zipstream = { path = "../asjeeves-zipstream", optional = true }

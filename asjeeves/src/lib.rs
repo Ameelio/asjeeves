@@ -33,6 +33,11 @@ pub mod user_session {
     pub use asjeeves_user_session::*;
 }
 
+#[cfg(feature = "zipstream")]
+pub mod zipstream {
+    pub use asjeeves_zipstream::*;
+}
+
 pub mod prelude {
     #[cfg(feature = "axum")]
     pub use super::axum::*;

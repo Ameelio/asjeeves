@@ -1,0 +1,13 @@
+[package]
+name = "asjeeves-zipstream"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+crc32fast.workspace = true
+flate2.workspace = true
+tokio.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["fs", "macros", "rt", "rt-multi-thread"]}
+tokio-test = "0.4.5"

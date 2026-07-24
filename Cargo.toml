@@ -8,7 +8,7 @@ members = [
   "asjeeves-jwks-service",
   "asjeeves-telemetry",
   "asjeeves-user-session"
-]
+, "asjeeves-zipstream"]
 resolver = "3"
 
 [workspace.dependencies]
@@ -47,6 +47,13 @@ chrono = "0.4.42"
 # Used for: csrf cookies
 # #########################################
 cookie = "0.18.1"
+
+# CRC32 used by zipstream
+crc32fast = "1.3"
+
+# DEFLATE algorithm
+# used by zipstream
+flate2 = "1.0"
 
 # #########################################
 # Core HTTP library used by reqwest, axum, tower
@@ -103,6 +110,12 @@ serde_jwt = { git = "https://github.com/Ameelio/serde_jwt.git", rev = "77ddce62a
 # code when defining errors.
 # #########################################
 thiserror = "2.0.18"
+
+# #########################################
+# Async framework
+# Needed for zipstream
+# #########################################
+tokio = { version = "1", features = ["io-util"] }
 
 # #########################################
 # gRPC Framework
