@@ -58,11 +58,14 @@ pub fn init_otlp_logger(
     let meter = metrics(grpc_metadata.clone(), svc_metadata.clone())?;
     let tracer = tracer(app, grpc_metadata, svc_metadata)?;
 
+    let stdout_logger = tracing_subscriber::fmt::layer().compact().with_ansi(true);
+
     let subscriber = Registry::default()
         .with(filter)
         .with(meter)
         .with(tracer)
-        .with(logger);
+        .with(logger)
+        .with(stdout_logger);
 
     tracing::subscriber::set_global_default(subscriber)?;
 
