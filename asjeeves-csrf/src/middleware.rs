@@ -1,35 +1,72 @@
-use axum::{
-    extract::Request,
-    http::{HeaderMap, HeaderValue, StatusCode},
-    middleware::Next,
-    response::Response,
-};
+//! CSRF middleware
+//!     - Adds a CSRF cookie on GET requests
+//!     - Execpects a CSRF cookie and matches it on DELETE/POST/PUT requests.
+//!
+//! ## Setup
+//!     - Add protect_from_forgery using `axum::middleware::from_fn_with_state`.
+//!     - Implement `FromRef<Rng>` for your state.
+
+use asjeeves_encryption::seed::Rng;
+use axum::extract::{Request, State};
+use axum::http::{HeaderMap, HeaderValue, Method, StatusCode, header};
+use axum::middleware::Next;
+use axum::response::Response;
 use axum_extra::extract::CookieJar;
+use tracing::instrument;
 
 use crate::form_authenticity_token::{COOKIE_NAME, FormAuthenticityToken};
 
+#[instrument(err, skip(jar))]
 pub async fn protect_against_forgery(
+    State(rng): State<Rng>,
     headers: HeaderMap,
     jar: CookieJar,
+    method: Method,
     request: Request,
     next: Next,
 ) -> Result<Response, StatusCode> {
-    let cookie_fat: FormAuthenticityToken =
-        jar.get(COOKIE_NAME).ok_or(StatusCode::FORBIDDEN)?.into();
+    match method {
+        Method::GET => {
+            let mut response: Response = next.run(request).await;
 
-    let client_fat: FormAuthenticityToken =
-        fetch_client_fat(&headers).ok_or(StatusCode::FORBIDDEN)?;
+            let cookie: String = {
+                let mut rng = rng;
 
-    if client_fat == cookie_fat {
-        let response: Response = next.run(request).await;
+                let fat = FormAuthenticityToken::generate(&mut rng);
 
-        Ok(response)
-    } else {
-        Err(StatusCode::FORBIDDEN)
+                fat.csrf_cookie().to_string()
+            };
+
+            if let Ok(hdr_val) = HeaderValue::from_str(&cookie) {
+                response.headers_mut().insert(header::SET_COOKIE, hdr_val);
+            }
+
+            Ok(response)
+        }
+        Method::PUT | Method::POST | Method::DELETE => {
+            let cookie_fat: FormAuthenticityToken =
+                jar.get(COOKIE_NAME).ok_or(StatusCode::FORBIDDEN)?.into();
+
+            let client_fat: FormAuthenticityToken =
+                fetch_client_fat(&headers).ok_or(StatusCode::FORBIDDEN)?;
+
+            if client_fat == cookie_fat {
+                let response: Response = next.run(request).await;
+
+                Ok(response)
+            } else {
+                Err(StatusCode::FORBIDDEN)
+            }
+        }
+        _ => {
+            let response: Response = next.run(request).await;
+
+            Ok(response)
+        }
     }
 }
 
-const X_CSRF_TOKEN: &'static str = "X-CSRF-TOKEN";
+const X_CSRF_TOKEN: &str = "X-CSRF-TOKEN";
 
 fn fetch_client_fat(headers: &HeaderMap) -> Option<FormAuthenticityToken> {
     if headers.contains_key(X_CSRF_TOKEN) {
@@ -47,6 +84,8 @@ fn fetch_client_fat(headers: &HeaderMap) -> Option<FormAuthenticityToken> {
 mod test {
     use super::*;
     use crate::form_authenticity_token::test::{FAT_ONE, FAT_TWO};
+    use asjeeves_encryption::seed::{Rng, Seed};
+    use axum::extract::FromRef;
     use axum::http::HeaderValue;
     use axum::middleware;
     use axum::routing::{Router, put};
@@ -57,11 +96,28 @@ mod test {
         StatusCode::OK
     }
 
+    #[derive(Clone, Default, Debug)]
+    struct State {
+        seed: Seed,
+    }
+
+    impl FromRef<State> for Rng {
+        fn from_ref(input: &State) -> Self {
+            input.seed.rng()
+        }
+    }
+
     #[tokio::test]
     async fn it_should_continue_the_request_if_valid() {
-        let app = Router::new()
-            .route("/", put(test_handler))
-            .layer(middleware::from_fn(protect_against_forgery));
+        let state = State::default();
+
+        let app =
+            Router::new()
+                .route("/", put(test_handler))
+                .layer(middleware::from_fn_with_state(
+                    state,
+                    protect_against_forgery,
+                ));
 
         let server = TestServer::new(app).unwrap();
 
@@ -79,9 +135,15 @@ mod test {
 
     #[tokio::test]
     async fn it_should_halt_the_request_if_invalid() {
-        let app = Router::new()
-            .route("/", put(test_handler))
-            .layer(middleware::from_fn(protect_against_forgery));
+        let state = State::default();
+
+        let app =
+            Router::new()
+                .route("/", put(test_handler))
+                .layer(middleware::from_fn_with_state(
+                    state,
+                    protect_against_forgery,
+                ));
 
         let server = TestServer::new(app).unwrap();
 

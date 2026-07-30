@@ -152,4 +152,4 @@ zeroize = { version = "1.8.2", features = ["serde"] }
 # #########################################
 # Internal subcrates
 # #########################################
-asjeeves-encryption = { path = "./asjeeves-encryption" }
+asjeeves-encryption = { version = "0.1.0", path = "./asjeeves-encryption" }
