@@ -1,11 +1,11 @@
 use std::borrow::Cow;
 
 use json_web_key::prelude::*;
+use json_web_tolkien::prelude::*;
 use rsa::pkcs1v15::{Signature, VerifyingKey};
 use rsa::sha2::Sha256;
 use rsa::signature::Verifier;
 use rsa::{BigUint, RsaPublicKey};
-use serde_jwt::prelude::*;
 
 use crate::Error;
 

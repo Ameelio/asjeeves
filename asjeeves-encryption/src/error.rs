@@ -26,7 +26,9 @@ pub enum Error {
         source: serde_json::Error,
     },
     #[error("unable to serialize token, {source}")]
-    JwtSerializationError { source: serde_jwt::error::Error },
+    JwtSerializationError {
+        source: json_web_tolkien::error::Error,
+    },
     #[error("unable to generate key, {source}")]
     KeyGenError { source: rsa::Error },
     #[error("unsupported algorithm")]

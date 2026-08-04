@@ -84,7 +84,7 @@ checksum = "03918c3dbd7701a85c6b9887732e2921175f26c350b4563841d0958c21d57e6d"
 
 [[package]]
 name = "asjeeves"
-version = "0.1.2-alpha.3"
+version = "0.1.2-alpha.4"
 dependencies = [
  "asjeeves-csrf",
  "asjeeves-dup-req-protection",
@@ -130,12 +130,12 @@ dependencies = [
  "base64ct",
  "cookie",
  "json-web-key",
+ "json-web-tolkien",
  "rand_chacha 0.3.1",
  "rand_core 0.6.4",
  "rsa",
  "serde",
  "serde_json",
- "serde_jwt",
  "thiserror",
  "tracing",
  "uuid",
@@ -1482,12 +1482,26 @@ dependencies = [
 
 [[package]]
 name = "json-web-key"
-version = "0.1.0"
-source = "git+https://github.com/Ameelio/json-web-key.git?rev=464d2a89e58ed63d0efa0a9cf3852b621fc06839#464d2a89e58ed63d0efa0a9cf3852b621fc06839"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ab6b82d3d6c86a3508851eda32eafd688f5ef25bf1e6a3234b835d40ddd029db"
 dependencies = [
  "base64ct",
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "json-web-tolkien"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bedb8475f6c55fed8359403c1c7232a8a0fba42a07f59e7db00e525692a2582a"
+dependencies = [
+ "base64ct",
+ "chrono",
+ "serde",
+ "serde_json",
+ "thiserror",
 ]
 
 [[package]]
@@ -2654,19 +2668,6 @@ dependencies = [
  "serde",
  "serde_core",
  "zmij",
-]
-
-[[package]]
-name = "serde_jwt"
-version = "0.1.0"
-source = "git+https://github.com/Ameelio/serde_jwt.git?rev=77ddce62a089ecf880908c591d92023dc0e2b888#77ddce62a089ecf880908c591d92023dc0e2b888"
-dependencies = [
- "base64ct",
- "chrono",
- "serde",
- "serde_json",
- "thiserror",
- "tracing",
 ]
 
 [[package]]

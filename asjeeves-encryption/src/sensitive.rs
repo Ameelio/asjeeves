@@ -38,6 +38,6 @@ where
     type Target = T;
 
     fn deref(&self) -> &Self::Target {
-        &self.0.deref()
+        self.0.deref()
     }
 }

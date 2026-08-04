@@ -3,6 +3,9 @@ use std::fmt;
 use std::sync::Arc;
 
 use json_web_key::prelude::*;
+use json_web_tolkien::jws::Jws;
+use json_web_tolkien::jwt::Jwt;
+use json_web_tolkien::prelude::Algorithm;
 use rand_core::{CryptoRng, RngCore};
 use rsa::pkcs1v15::{Signature, SigningKey, VerifyingKey};
 use rsa::pkcs8::{DecodePrivateKey, EncodePrivateKey, SecretDocument};
@@ -11,9 +14,6 @@ use rsa::signature::{SignatureEncoding, SignerMut, Verifier};
 use rsa::traits::PublicKeyParts;
 use rsa::{Pkcs1v15Encrypt, RsaPrivateKey, RsaPublicKey};
 use serde::{Deserialize, Serialize};
-use serde_jwt::jws::Jws;
-use serde_jwt::jwt::Jwt;
-use serde_jwt::prelude::Algorithm;
 use tracing::instrument;
 use uuid::Uuid;
 use zeroize::Zeroizing;
@@ -31,7 +31,7 @@ pub struct PrivateKey {
 
 impl PrivateKey {
     #[instrument(skip(ciphertext))]
-    pub fn decrypt_bytes<'a>(&self, ciphertext: &[u8]) -> Result<Vec<u8>, Error> {
+    pub fn decrypt_bytes(&self, ciphertext: &[u8]) -> Result<Vec<u8>, Error> {
         let dec_bytes: Vec<u8> = self
             .inner
             .decrypt(Pkcs1v15Encrypt, ciphertext)
@@ -41,7 +41,7 @@ impl PrivateKey {
     }
 
     #[instrument]
-    pub fn encrypt_bytes<'a, R>(
+    pub fn encrypt_bytes<R>(
         &self,
         bytes: Sensitive<Box<[u8]>>,
         rng: &mut R,
@@ -88,7 +88,7 @@ impl PrivateKey {
         self.sign_json_web_token(token)
     }
 
-    #[instrument]
+    #[instrument(skip(token))]
     pub fn sign_json_web_token<C, H>(&self, token: Jwt<C, H>) -> Result<Jws, Error>
     where
         C: fmt::Debug + Serialize,
@@ -96,7 +96,7 @@ impl PrivateKey {
     {
         let mut signing_key: SigningKey<Sha256> = SigningKey::new((*self.inner).clone());
 
-        // move this to serde_jwt.
+        // move this to json_web_tolkien.
         let encoded_token: String = token
             .to_string()
             .map_err(|source| Error::JwtSerializationError { source })?;
@@ -117,7 +117,7 @@ impl PrivateKey {
     }
 
     #[instrument]
-    pub fn generate<'a, R>(rng: &mut R) -> Result<Self, Error>
+    pub fn generate<R>(rng: &mut R) -> Result<Self, Error>
     where
         R: CryptoRng + RngCore + fmt::Debug,
     {
@@ -162,7 +162,7 @@ impl PrivateKey {
     }
 
     #[instrument]
-    pub fn to_json<'a>(&self) -> Result<serde_json::Value, Error> {
+    pub fn to_json(&self) -> Result<serde_json::Value, Error> {
         let jwk: JsonWebKey = self.to_json_web_key();
 
         let json_val: serde_json::Value = serde_json::to_value(jwk)?;

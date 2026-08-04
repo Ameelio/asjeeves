@@ -40,7 +40,7 @@ impl KeyEncryptionKey {
     }
 
     #[instrument]
-    pub fn encrypt_key<'a, R>(&self, key: &WebKey, rng: &mut R) -> Result<EncryptedKey, Error>
+    pub fn encrypt_key<R>(&self, key: &WebKey, rng: &mut R) -> Result<EncryptedKey, Error>
     where
         R: CryptoRng + RngCore + Debug,
     {
@@ -69,12 +69,7 @@ impl KeyEncryptionKey {
     }
 
     #[instrument(skip(enc_key, nonce))]
-    pub fn decrypt_key<'a>(
-        &self,
-        enc_key: &[u8],
-        key_id: &str,
-        nonce: &[u8],
-    ) -> Result<WebKey, Error> {
+    pub fn decrypt_key(&self, enc_key: &[u8], key_id: &str, nonce: &[u8]) -> Result<WebKey, Error> {
         let cipher = Aes256Gcm::new(&self.0);
         let nonce = Nonce::from_slice(nonce);
 

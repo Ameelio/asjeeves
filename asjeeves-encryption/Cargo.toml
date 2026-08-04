@@ -24,9 +24,9 @@ base64ct.workspace = true
 # Algorithm: RSA, SHA 256
 # #########################################################
 json-web-key.workspace = true
+json-web-tolkien.workspace = true
 rsa.workspace = true
 serde_json.workspace = true
-serde_jwt.workspace = true
 
 # #########################################################
 # Random Generation

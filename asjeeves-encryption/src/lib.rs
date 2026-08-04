@@ -9,7 +9,7 @@ pub mod web_key;
 pub use error::Error;
 
 pub mod jwt {
-    pub use serde_jwt::*;
+    pub use json_web_tolkien::*;
 }
 
 pub mod prelude {
@@ -20,5 +20,5 @@ pub mod prelude {
     pub use crate::sensitive::Sensitive;
     pub use crate::web_key::{PrivateKey, WebKey};
     pub use json_web_key::jwk::{JsonWebKey, JsonWebKeySet};
-    pub use serde_jwt::prelude::{Algorithm, Jws, Jwt};
+    pub use json_web_tolkien::prelude::{Algorithm, Jws, Jwt};
 }

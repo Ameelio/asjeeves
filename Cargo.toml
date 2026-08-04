@@ -66,10 +66,17 @@ http-body-util = "0.1.3"
 
 # #########################################
 # Our own crate that provides the structure
-# and conversions to JWS objects per the IETF
+# and conversions to JWKS objects per the IETF
 # spec.
 # #########################################
-json-web-key = { git = "https://github.com/Ameelio/json-web-key.git", rev = "464d2a89e58ed63d0efa0a9cf3852b621fc06839" }
+json-web-key = "0.1.1"
+
+# #########################################
+# Our own crate that provides the structure
+# and conversions to JWS and JWT objects per
+# the IETF spec.
+# #########################################
+json-web-tolkien = "0.2.0"
 
 # #########################################
 # Randomization - ChaCha 20
@@ -103,7 +110,6 @@ rsa = { version = "0.9", features = ["sha2"] }
 # #########################################
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0.141"
-serde_jwt = { git = "https://github.com/Ameelio/serde_jwt.git", rev = "77ddce62a089ecf880908c591d92023dc0e2b888", features = ["debug"]}
 
 # #########################################
 # Provides derive(Error) which makes for cleaner
