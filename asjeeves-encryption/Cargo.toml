@@ -1,7 +1,12 @@
 [package]
 name = "asjeeves-encryption"
-version = "0.1.0"
+description = "Encryption and Key utilities."
 edition = "2024"
+homepage = "https://github.com/Ameelio/asjeeves/"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/Ameelio/asjeeves/"
+version = "0.1.0"
 
 [dependencies]
 

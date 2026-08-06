@@ -1,7 +1,12 @@
 [package]
 name = "asjeeves-dup-req-protection"
-version = "0.1.0"
+description = "Duplicate Request Protection"
 edition = "2024"
+homepage = "https://github.com/Ameelio/asjeeves/"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/Ameelio/asjeeves/"
+version = "0.1.0"
 
 [dependencies]
 
