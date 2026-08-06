@@ -4,10 +4,9 @@
 //!
 //! ## Randomization used
 //! As of 2025.07.17 The from_entropy() function of the rand crate behaves as such:
-//! - Automatic seeding and reseeding via OsRng (for Linux this is the getrandom syscall, or
-//! /dev/urandom)
-//! - Algorithm used: ChaCha (20 rounds)
-//! - Does not zero memory on exit. (No protection for internal memory state)
+//!     - Automatic seeding and reseeding via OsRng (for Linux this is the getrandom syscall, or /dev/urandom)
+//!     - Algorithm used: ChaCha (20 rounds)
+//!     - Does not zero memory on exit. (No protection for internal memory state)
 
 use std::{borrow::Cow, convert::Infallible, fmt};
 
@@ -23,7 +22,7 @@ use rand_core::RngCore;
 
 use tracing::instrument;
 
-pub const COOKIE_NAME: &'static str = "csrf_token";
+pub const COOKIE_NAME: &str = "csrf_token";
 
 // Recommended length (128 bits / 16 bytes) for the token.
 const TOKEN_LEN: usize = 32;
@@ -46,7 +45,7 @@ impl FormAuthenticityToken {
     ///
     /// ```
     #[instrument]
-    pub fn generate<'a, R>(rng: &mut R) -> Self
+    pub fn generate<R>(rng: &mut R) -> Self
     where
         R: fmt::Debug + RngCore,
     {
@@ -72,7 +71,7 @@ impl FormAuthenticityToken {
             .build()
     }
 
-    pub fn as_str<'a>(&'a self) -> &'a str {
+    pub fn as_str(&self) -> &str {
         self.0.as_ref()
     }
 }

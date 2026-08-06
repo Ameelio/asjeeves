@@ -6,7 +6,7 @@ homepage = "https://github.com/Ameelio/asjeeves/"
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/Ameelio/asjeeves/"
-version = "0.1.0"
+version = "0.1.0-alpha.1"
 
 [dependencies]
 
@@ -29,6 +29,7 @@ base64ct.workspace = true
 # #########################################
 rand_chacha.workspace = true
 rand_core.workspace = true
+asjeeves-encryption.workspace = true
 
 # #########################################
 # Instrumentation and Logging
