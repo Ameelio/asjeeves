@@ -11,16 +11,15 @@ use axum::extract::{Request, State};
 use axum::http::{HeaderMap, HeaderValue, Method, StatusCode, header};
 use axum::middleware::Next;
 use axum::response::Response;
-use axum_extra::extract::CookieJar;
 use tracing::instrument;
 
-use crate::form_authenticity_token::{COOKIE_NAME, FormAuthenticityToken};
+use crate::form_authenticity_token::FormAuthenticityToken;
 
-#[instrument(err, skip(jar))]
+#[instrument(err, skip(cookie_fat))]
 pub async fn protect_against_forgery(
     State(rng): State<Rng>,
+    cookie_fat: Option<FormAuthenticityToken>,
     headers: HeaderMap,
-    jar: CookieJar,
     method: Method,
     request: Request,
     next: Next,
@@ -44,8 +43,7 @@ pub async fn protect_against_forgery(
             Ok(response)
         }
         Method::PUT | Method::POST | Method::DELETE => {
-            let cookie_fat: FormAuthenticityToken =
-                jar.get(COOKIE_NAME).ok_or(StatusCode::FORBIDDEN)?.into();
+            let cookie_fat: FormAuthenticityToken = cookie_fat.ok_or(StatusCode::FORBIDDEN)?;
 
             let client_fat: FormAuthenticityToken =
                 fetch_client_fat(&headers).ok_or(StatusCode::FORBIDDEN)?;
@@ -83,6 +81,7 @@ fn fetch_client_fat(headers: &HeaderMap) -> Option<FormAuthenticityToken> {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::form_authenticity_token::COOKIE_NAME;
     use crate::form_authenticity_token::test::{FAT_ONE, FAT_TWO};
     use asjeeves_encryption::seed::{Rng, Seed};
     use axum::extract::FromRef;

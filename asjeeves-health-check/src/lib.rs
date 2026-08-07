@@ -11,7 +11,7 @@ use http::{Request, Response, StatusCode};
 use http_body_util::Full;
 use tower::Service;
 
-const OK: &'static str = "OK";
+const OK: &str = "OK";
 
 #[derive(Clone)]
 pub struct HealthCheck {}
@@ -56,12 +56,29 @@ impl<T> Service<Request<T>> for HealthCheck {
 
 #[cfg(test)]
 mod tests {
+    use std::pin::Pin;
+    use std::task::{Context, Waker};
+
     use super::*;
 
-    #[tokio::test]
-    async fn it_responds_with_ok() {
-        let resp = HealthCheck::respond_ok().unwrap();
+    #[test]
+    fn it_responds_with_ok() {
+        let mut service = HealthCheck {};
 
-        assert_eq!(StatusCode::OK, resp.status());
+        let request = Request::builder().body(()).unwrap();
+
+        let mut cx = Context::from_waker(Waker::noop());
+
+        let poll = <HealthCheck as Service<Request<()>>>::poll_ready(&mut service, &mut cx);
+        assert!(poll.is_ready());
+
+        let mut future = service.call(request);
+
+        let poll = Future::poll(Pin::new(&mut future), &mut cx);
+
+        match poll {
+            Poll::Ready(Ok(response)) => assert_eq!(StatusCode::OK, response.status()),
+            _ => panic!("Expected service to respond with OK"),
+        }
     }
 }

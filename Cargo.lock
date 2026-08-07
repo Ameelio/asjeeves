@@ -84,7 +84,7 @@ checksum = "03918c3dbd7701a85c6b9887732e2921175f26c350b4563841d0958c21d57e6d"
 
 [[package]]
 name = "asjeeves"
-version = "0.1.2-alpha.5"
+version = "0.1.2-alpha.6"
 dependencies = [
  "asjeeves-csrf",
  "asjeeves-dup-req-protection",
@@ -98,7 +98,7 @@ dependencies = [
 
 [[package]]
 name = "asjeeves-csrf"
-version = "0.1.0-alpha.1"
+version = "0.1.0-alpha.2"
 dependencies = [
  "asjeeves-encryption",
  "axum",
@@ -125,7 +125,7 @@ dependencies = [
 
 [[package]]
 name = "asjeeves-encryption"
-version = "0.1.0"
+version = "0.1.1-alpha.1"
 dependencies = [
  "aes-gcm",
  "base64ct",
@@ -145,7 +145,7 @@ dependencies = [
 
 [[package]]
 name = "asjeeves-health-check"
-version = "0.2.0"
+version = "0.2.1-alpha.1"
 dependencies = [
  "bytes",
  "http",
@@ -193,7 +193,7 @@ dependencies = [
 
 [[package]]
 name = "asjeeves-user-session"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "asjeeves-encryption",
  "axum",

@@ -30,7 +30,7 @@ impl<InnerService> Layer<InnerService> for UserSessionLayer {
         let redis_counter_key: Arc<str> = Arc::clone(&self.options.redis_counter_key);
         let redis_key: Arc<str> = Arc::clone(&self.options.redis_key);
         let private_keys: UserSessionKeys = self.private_keys.clone();
-        let seconds_to_live: u64 = self.ttl.num_seconds().abs() as u64;
+        let seconds_to_live: u64 = self.ttl.num_seconds().unsigned_abs();
 
         let state = UserSessionState {
             cache,
