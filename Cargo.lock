@@ -157,7 +157,7 @@ dependencies = [
 
 [[package]]
 name = "asjeeves-jwks-service"
-version = "0.1.2"
+version = "0.1.3"
 dependencies = [
  "bytes",
  "http",
@@ -213,7 +213,7 @@ dependencies = [
 
 [[package]]
 name = "asjeeves-zipstream"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "crc32fast",
  "flate2",
