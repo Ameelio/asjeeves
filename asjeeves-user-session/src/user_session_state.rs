@@ -35,3 +35,30 @@ impl fmt::Debug for UserSessionState {
             .finish_non_exhaustive()
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use crate::tests::test_state;
+
+    #[tokio::test]
+    async fn it_should_obfuscate_when_debugged() {
+        let ts = test_state().await;
+
+        let state = UserSessionState {
+            cache: ts.cache,
+            cookie_name: "test".into(),
+            private_keys: ts.keys,
+            redis_counter_key: "test".into(),
+            redis_key: "test".into(),
+            seconds_to_live: 0,
+        };
+
+        let dbg = format!("{:?}", state);
+
+        assert_eq!(
+            r#"SessionStore { cookie_name: "test", redis_counter_key: "test", redis_key: "test", seconds_to_live: 0, .. }"#,
+            dbg
+        );
+    }
+}

@@ -32,3 +32,19 @@ impl fmt::Debug for UserSessionKeys {
         f.debug_struct("UserSessionKeys").finish_non_exhaustive()
     }
 }
+
+#[cfg(test)]
+mod test {
+    use crate::tests::test_state;
+
+    #[tokio::test]
+    async fn it_should_obfuscate_debug_info() {
+        let ts = test_state().await;
+
+        let usk = ts.keys;
+
+        let dbg = format!("{:?}", usk);
+
+        assert_eq!("UserSessionKeys { .. }", dbg);
+    }
+}

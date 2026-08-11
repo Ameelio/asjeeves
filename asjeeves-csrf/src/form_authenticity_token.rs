@@ -81,6 +81,7 @@ impl AsRef<str> for FormAuthenticityToken {
         self.0.as_ref()
     }
 }
+
 impl fmt::Display for FormAuthenticityToken {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.0.as_ref())
@@ -148,9 +149,11 @@ pub mod test {
         );
 
         assert_eq!(FAT_ONE, fat_one.as_str());
+        assert_eq!(FAT_ONE, fat_one.as_ref());
         assert_eq!(ec_one, fat_one.csrf_cookie().to_string());
 
         assert_eq!(FAT_TWO, fat_two.as_str());
+        assert_eq!(FAT_TWO, fat_two.as_ref());
         assert_eq!(ec_two, fat_two.csrf_cookie().to_string());
     }
 }

@@ -87,7 +87,7 @@ impl Seed {
 
 impl fmt::Debug for Seed {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Seed")
+        f.debug_struct("Seed").finish_non_exhaustive()
     }
 }
 
@@ -125,13 +125,57 @@ mod test {
 
     #[test]
     fn it_generates_a_random_number() {
-        let seed = Seed::from(1);
-        let mut rng: Rng = seed.rng();
+        {
+            let seed = Seed::from(1);
+            let mut rng: Rng = seed.rng();
 
-        let mut data = [0u8; 2];
+            let mut data = [0u8; 2];
 
-        rng.fill_bytes(&mut data);
+            rng.fill_bytes(&mut data);
 
-        assert_eq!([62u8, 186u8], data);
+            assert_eq!([62u8, 186u8], data);
+        }
+
+        {
+            let seed = Seed::from(1);
+            let mut rng: Rng = seed.rng();
+
+            let mut data = [0u8; 2];
+
+            rng.try_fill_bytes(&mut data).unwrap();
+
+            assert_eq!([62u8, 186u8], data);
+        }
+
+        {
+            let seed = Seed::from(1);
+            let mut rng: Rng = seed.rng();
+
+            let datum: u32 = rng.next_u32();
+
+            assert_eq!(649050686, datum);
+        }
+
+        {
+            let seed = Seed::from(1);
+            let mut rng: Rng = seed.rng();
+
+            let datum: u64 = rng.next_u64();
+
+            assert_eq!(15639741899973048894, datum);
+        }
+    }
+
+    #[test]
+    fn it_obfuscates_sensitive_data_when_debugged() {
+        let seed = Seed::default();
+
+        let dbg = format!("{:?}", seed);
+
+        assert_eq!("Seed { .. }", dbg);
+
+        let dbg = format!("{:?}", seed.rng());
+
+        assert_eq!("Rng { .. }", dbg);
     }
 }

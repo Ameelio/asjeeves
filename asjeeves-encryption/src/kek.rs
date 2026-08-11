@@ -13,7 +13,7 @@ use zeroize::Zeroizing;
 use crate::error::Error;
 use crate::web_key::WebKey;
 
-#[derive(Clone, Deserialize)]
+#[derive(Clone, Deserialize, Eq, PartialEq)]
 #[serde(try_from = "String")]
 pub struct KeyEncryptionKey(Arc<aes_gcm::Key<Aes256Gcm>>);
 
@@ -139,5 +139,34 @@ mod test {
         let dec_key = kek.decrypt_key(&enc_key, web_key.id(), &nonce).unwrap();
 
         assert_eq!(dec_key, web_key)
+    }
+
+    #[test]
+    fn it_should_decode_and_encode_with_base64() {
+        let seed = Seed::from(1);
+
+        let mut rng: Rng = seed.rng();
+
+        let kek = KeyEncryptionKey::generate(&mut rng);
+
+        let kek_str: String = kek.to_string();
+
+        let kek_two = KeyEncryptionKey::try_from(kek_str).unwrap();
+
+        assert_eq!(kek, kek_two);
+        assert_eq!(kek.as_slice(), kek_two.as_slice());
+    }
+
+    #[test]
+    fn it_should_hide_details_when_debugged() {
+        let seed = Seed::from(1);
+
+        let mut rng: Rng = seed.rng();
+
+        let kek = KeyEncryptionKey::generate(&mut rng);
+
+        let dbg = format!("{:?}", kek);
+
+        assert_eq!("KeyEncryptionKey { .. }", dbg);
     }
 }

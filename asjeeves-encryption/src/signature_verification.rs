@@ -92,9 +92,7 @@ mod tests {
         let signing_key = SigningKey::<Sha256>::new(private_key.clone());
         let signature = signing_key.sign(token.as_bytes());
 
-        let jws = Jws::new(token.as_str(), signature.to_bytes().as_ref());
-
-        jws
+        Jws::new(token.as_str(), signature.to_bytes().as_ref())
     }
 
     #[test]
