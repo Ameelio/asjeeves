@@ -95,6 +95,7 @@ pub fn track_database_metrics(dbstate: bb8::State, pool_size: u32) {
     conn_get.set(stats.get_wait_time.as_secs_f64());
 }
 
+#[allow(dead_code)]
 struct DbConfig {
     name: Arc<str>,
     system: Arc<str>,

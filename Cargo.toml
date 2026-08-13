@@ -84,11 +84,9 @@ json-web-key = "0.1.1"
 json-web-tolkien = "0.2.0"
 
 # #########################################
-# Metrics tracking library with Promethus 
-# exporter.
+# Metrics tracking library
 # #########################################
 metrics = "0.24.6"
-metrics-exporter-prometheus = "0.16"
 
 # #########################################
 # Randomization - ChaCha 20
