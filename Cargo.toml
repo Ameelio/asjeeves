@@ -31,6 +31,11 @@ axum-extra = { version = "0.12", features = ["cookie"] }
 # #########################################
 base64ct = { version = "1.8.0", features = ["alloc"]}
 
+# ###########################################
+# Database async connection pool with metrics
+# ###########################################
+bb8 = "0.9.1"
+
 # #########################################
 # Efficient binary data handler.
 # Used for: http web services (tower)
@@ -79,6 +84,11 @@ json-web-key = "0.1.1"
 json-web-tolkien = "0.2.0"
 
 # #########################################
+# Metrics tracking library
+# #########################################
+metrics = "0.24.6"
+
+# #########################################
 # Randomization - ChaCha 20
 # Used for: CSRF cookies, Duplication
 #   Protection, RSA Keys
@@ -90,6 +100,11 @@ rand_core = "0.6"
 # Cache used for user sessions and csrf tokens
 # #########################################
 redis = { version = "1.0.3", features = ["aio","connection-manager", "tokio-rustls-comp", "tls-rustls"] }
+
+# #########################################
+# Official regular expression crate
+# #########################################
+regex = "1.13.1"
 
 # #########################################
 # HTTP Client — Reqwest
@@ -152,4 +167,4 @@ zeroize = { version = "1.8.2", features = ["serde"] }
 # #########################################
 # Internal subcrates
 # #########################################
-asjeeves-encryption = { version = "0.1.0", path = "./asjeeves-encryption" }
+asjeeves-encryption = { version = "0.1.1-alpha.1", path = "./asjeeves-encryption" }

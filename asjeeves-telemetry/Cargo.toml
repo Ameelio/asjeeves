@@ -5,11 +5,20 @@ homepage = "https://github.com/Ameelio/asjeeves/"
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/Ameelio/asjeeves/"
-version = "0.1.0"
+version = "0.2.0-alpha.1"
 edition = "2024"
 
 [features]
 error = []
+
+axum = [
+  "dep:axum"
+]
+
+bb8 = [
+  "dep:bb8",
+]
+
 logger = [
   "dep:opentelemetry",
   "dep:opentelemetry-appender-tracing",
@@ -37,31 +46,45 @@ tower = [
 
 [dependencies]
 
-# Error handling
-thiserror.workspace = true
+# axum framework
+axum = { workspace = true, optional = true }
 
-# logging and collecting event metadata
-tracing.workspace = true
+# database metrics
+bb8 = { workspace = true, optional = true }
 
 # Add tracing to a service
 http = { workspace = true, optional = true }
 http-body = { version = "1.0.1", optional = true }
 tower-http = { version = "0.6.8", features = ["trace"], optional = true}
-tonic = { workspace = true, optional = true }
+
+# metrics
+metrics.workspace = true
 
 # otlp export for logger
 opentelemetry = { version = "0.31.0", optional = true }
 opentelemetry-otlp = { version = "0.31.0", features = ["grpc-tonic"], optional = true }
 opentelemetry_sdk = { version = "0.31.0", features = ["rt-tokio"], optional = true }
 tracing-opentelemetry = { version = "0.32.1", optional = true }
-tracing-subscriber = { version = "0.3.22", features = ["env-filter"], optional = true }
+tracing-subscriber = { version = "0.3.22", features = ["env-filter", "json"], optional = true }
 opentelemetry-appender-tracing = { version = "0.31.1", optional = true  }
 opentelemetry-semantic-conventions = { version = "0.31.0", optional = true }
+
+# regex for route snarfing
+regex.workspace = true
 
 # tracing for reqwest
 reqwest = { workspace = true, optional = true }
 reqwest-middleware = { workspace = true, optional = true }
 reqwest-tracing = { workspace = true, optional = true }
+
+# Error handling
+thiserror.workspace = true
+
+# grpc support
+tonic = { workspace = true, optional = true }
+
+# logging and collecting event metadata
+tracing.workspace = true
 
 # opentelemetry-http = "0.31.0"
 # bytes = "1.11.1"

@@ -8,7 +8,6 @@
 //!     - **reqwest** HTTP Request tracing for the `reqwest` crate.
 //!     - **tower** Health Check and JWKS web services that use `tower`.
 //!     - **zipstream** A zip compressor that works over a stream.
-//!
 #[cfg(feature = "axum")]
 pub mod csrf {
     pub use asjeeves_csrf::*;

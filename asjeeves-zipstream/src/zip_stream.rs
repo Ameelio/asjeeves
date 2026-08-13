@@ -77,7 +77,7 @@ where
 
                 compressor
                     .compress(&chunk[input_pos..], &mut comp_buf, FlushCompress::None)
-                    .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+                    .map_err(std::io::Error::other)?;
 
                 let consumed = (compressor.total_in() - before_in) as usize;
                 let produced = (compressor.total_out() - before_out) as usize;
@@ -99,7 +99,7 @@ where
 
             compressor
                 .compress(&[], &mut comp_buf, FlushCompress::Finish)
-                .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+                .map_err(std::io::Error::other)?;
 
             let produced = (compressor.total_out() - before_out) as usize;
 

@@ -44,7 +44,7 @@ where
             return Err(Error::MissingSessionCookie);
         };
 
-        let user_session: T = fetch_user_session(cookie, &uss).await?;
+        let user_session: T = fetch_user_session(cookie, uss).await?;
 
         Ok(UserSession(user_session))
     }

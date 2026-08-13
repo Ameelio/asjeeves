@@ -41,3 +41,20 @@ where
         self.0.deref()
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use std::ops::Deref;
+
+    #[test]
+    fn it_hides_sensitive_info() {
+        let data = vec![1u8, 2u8];
+        let s: Sensitive<Vec<u8>> = Sensitive::new(data);
+
+        let dbg = format!("{:?}", s);
+
+        assert_eq!("Sensitive { .. }", dbg);
+        assert_eq!(&vec![1u8, 2u8], s.deref());
+    }
+}

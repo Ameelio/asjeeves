@@ -83,7 +83,9 @@ where
 
 #[cfg(test)]
 mod test {
-    use std::{collections::HashSet, convert::Infallible};
+    use std::collections::HashSet;
+    use std::pin::Pin;
+    use std::task::{Context, Waker};
 
     use http::HeaderValue;
     use json_web_key::{jwk::JsonWebKey, rsa::RsaWebKey};
@@ -117,13 +119,25 @@ mod test {
 
     #[test]
     fn it_provides_jwks() {
+        let mut cx = Context::from_waker(Waker::noop());
+        let request = Request::builder().body(()).unwrap();
         let state = StateWithJwks {};
-        let serv = JwksService {
+
+        let mut service = JwksService {
             state: Arc::new(state),
         };
 
-        let resp = serv.get_jwks_handler().unwrap();
+        let poll = <JwksService as Service<Request<()>>>::poll_ready(&mut service, &mut cx);
 
-        assert_eq!(StatusCode::OK, resp.status())
+        assert!(poll.is_ready());
+
+        let mut future = service.call(request);
+
+        let poll = Future::poll(Pin::new(&mut future), &mut cx);
+
+        match poll {
+            Poll::Ready(Ok(response)) => assert_eq!(StatusCode::OK, response.status()),
+            _ => panic!("Expected service to respond with OK"),
+        }
     }
 }

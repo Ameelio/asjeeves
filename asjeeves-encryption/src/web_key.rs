@@ -225,10 +225,18 @@ mod tests {
     use crate::seed::Seed;
 
     #[test]
-    fn test_generate() {
+    fn it_should_enc_and_decrypt() {
         let seed = Seed::from(1);
         let mut rng = seed.rng();
 
-        assert!(WebKey::generate(&mut rng).is_ok())
+        let key = WebKey::generate(&mut rng).unwrap();
+
+        let unenc = Sensitive::new(vec![1u8, 2u8].into_boxed_slice());
+
+        let enc = key.encrypt_bytes(unenc, &mut rng).unwrap();
+
+        let dec = key.decrypt_bytes(&enc).unwrap();
+
+        assert_eq!(vec![1u8, 2u8], dec);
     }
 }

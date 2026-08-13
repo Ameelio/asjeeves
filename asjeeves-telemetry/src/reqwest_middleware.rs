@@ -5,7 +5,7 @@ use reqwest::{Request, Response};
 use tracing::Span;
 
 use reqwest_tracing::{
-    default_on_request_end, reqwest_otel_span, ReqwestOtelSpanBackend, TracingMiddleware,
+    ReqwestOtelSpanBackend, TracingMiddleware, default_on_request_end, reqwest_otel_span,
 };
 
 pub type HttpTraceMiddleware = TracingMiddleware<HttpTrace>;
@@ -28,8 +28,7 @@ impl ReqwestOtelSpanBackend for HttpTrace {
 
         let body: Cow<'_, str> = req
             .body()
-            .map(|x| x.as_bytes())
-            .flatten()
+            .and_then(|x| x.as_bytes())
             .map(|x| String::from_utf8_lossy(x))
             .unwrap_or_default();
 

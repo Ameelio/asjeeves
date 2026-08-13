@@ -84,7 +84,7 @@ checksum = "03918c3dbd7701a85c6b9887732e2921175f26c350b4563841d0958c21d57e6d"
 
 [[package]]
 name = "asjeeves"
-version = "0.1.2-alpha.5"
+version = "0.1.2-alpha.6"
 dependencies = [
  "asjeeves-csrf",
  "asjeeves-dup-req-protection",
@@ -98,7 +98,7 @@ dependencies = [
 
 [[package]]
 name = "asjeeves-csrf"
-version = "0.1.0-alpha.1"
+version = "0.1.0-alpha.2"
 dependencies = [
  "asjeeves-encryption",
  "axum",
@@ -125,7 +125,7 @@ dependencies = [
 
 [[package]]
 name = "asjeeves-encryption"
-version = "0.1.0"
+version = "0.1.1-alpha.1"
 dependencies = [
  "aes-gcm",
  "base64ct",
@@ -145,7 +145,7 @@ dependencies = [
 
 [[package]]
 name = "asjeeves-health-check"
-version = "0.2.0"
+version = "0.2.1-alpha.1"
 dependencies = [
  "bytes",
  "http",
@@ -157,7 +157,7 @@ dependencies = [
 
 [[package]]
 name = "asjeeves-jwks-service"
-version = "0.1.2"
+version = "0.1.3"
 dependencies = [
  "bytes",
  "http",
@@ -171,15 +171,19 @@ dependencies = [
 
 [[package]]
 name = "asjeeves-telemetry"
-version = "0.1.0"
+version = "0.2.0-alpha.1"
 dependencies = [
+ "axum",
+ "bb8",
  "http",
  "http-body",
+ "metrics",
  "opentelemetry",
  "opentelemetry-appender-tracing",
  "opentelemetry-otlp",
  "opentelemetry-semantic-conventions",
  "opentelemetry_sdk",
+ "regex",
  "reqwest 0.13.4",
  "reqwest-middleware",
  "reqwest-tracing",
@@ -193,7 +197,7 @@ dependencies = [
 
 [[package]]
 name = "asjeeves-user-session"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "asjeeves-encryption",
  "axum",
@@ -213,7 +217,7 @@ dependencies = [
 
 [[package]]
 name = "asjeeves-zipstream"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "crc32fast",
  "flate2",
@@ -413,6 +417,18 @@ name = "base64ct"
 version = "1.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2af50177e190e07a26ab74f8b1efbfe2ef87da2116221318cb1c2e82baf7de06"
+
+[[package]]
+name = "bb8"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "457d7ed3f888dfd2c7af56d4975cade43c622f74bdcddfed6d4352f57acc6310"
+dependencies = [
+ "futures-util",
+ "parking_lot",
+ "portable-atomic",
+ "tokio",
+]
 
 [[package]]
 name = "bitflags"
@@ -1581,6 +1597,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf8baf1c55e62ffcace7a9f06f4bd9cd3f0c4beb022d3b367256b91b87513d98"
 
 [[package]]
+name = "metrics"
+version = "0.24.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "89550ee9f79e88fef3119de263694973a8adb26c21d75322164fb8c493039fe2"
+dependencies = [
+ "portable-atomic",
+ "rapidhash",
+]
+
+[[package]]
 name = "mime"
 version = "0.3.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2205,6 +2231,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "rapidhash"
+version = "4.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5da7e78a036ce858e8d55b7e7dc8ba3a88b78350fd2155d3591bbd966b58589e"
+dependencies = [
+ "rustversion",
+]
+
+[[package]]
 name = "redis"
 version = "1.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2261,9 +2296,9 @@ dependencies = [
 
 [[package]]
 name = "regex"
-version = "1.13.0"
+version = "1.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2a0e75113e14dc5acb068cd0786884f214f1312650a3d36d269f5c4f3cdee8a2"
+checksum = "f020237b6c8eed93db2e2cb53c00c60a8e1bc73da7d073199a1180401450218d"
 dependencies = [
  "aho-corasick",
  "memchr",
@@ -2273,9 +2308,9 @@ dependencies = [
 
 [[package]]
 name = "regex-automata"
-version = "0.4.15"
+version = "0.4.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1f388202e4b80542a0921078cc23b6333bcf1409c1e3f86404cae4766a6131db"
+checksum = "ad8553b9b26413251cbf30e620595c7a41b3887f03da04579c0e6b0d6a06b4b2"
 dependencies = [
  "aho-corasick",
  "memchr",
@@ -2972,6 +3007,7 @@ dependencies = [
  "bytes",
  "libc",
  "mio",
+ "parking_lot",
  "pin-project-lite",
  "socket2",
  "tokio-macros",
@@ -3185,6 +3221,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "tracing-serde"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "704b1aeb7be0d0a84fc9828cae51dab5970fee5088f83d1dd7ee6f6246fc6ff1"
+dependencies = [
+ "serde",
+ "tracing-core",
+]
+
+[[package]]
 name = "tracing-subscriber"
 version = "0.3.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3194,12 +3240,15 @@ dependencies = [
  "nu-ansi-term",
  "once_cell",
  "regex-automata",
+ "serde",
+ "serde_json",
  "sharded-slab",
  "smallvec",
  "thread_local",
  "tracing",
  "tracing-core",
  "tracing-log",
+ "tracing-serde",
 ]
 
 [[package]]
