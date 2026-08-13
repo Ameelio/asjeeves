@@ -5,14 +5,13 @@
 use opentelemetry::trace::TracerProvider;
 use opentelemetry_appender_tracing::layer::OpenTelemetryTracingBridge;
 use opentelemetry_otlp::tonic_types::metadata::MetadataMap;
-use opentelemetry_otlp::{LogExporter, MetricExporter, SpanExporter, WithTonicConfig};
+use opentelemetry_otlp::{LogExporter, SpanExporter, WithTonicConfig};
 use opentelemetry_sdk::Resource;
 use opentelemetry_sdk::logs::{SdkLogger, SdkLoggerProvider};
-use opentelemetry_sdk::metrics::SdkMeterProvider;
 use opentelemetry_sdk::trace::{SdkTracer, SdkTracerProvider};
 use thiserror::Error;
 use tracing::Subscriber;
-use tracing_opentelemetry::{MetricsLayer, OpenTelemetryLayer};
+use tracing_opentelemetry::OpenTelemetryLayer;
 use tracing_subscriber::Registry;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::registry::LookupSpan;
@@ -21,10 +20,7 @@ use tracing_subscriber::{EnvFilter, Layer};
 pub fn init_logger() -> Result<(), Error> {
     let filter = EnvFilter::from_default_env();
 
-    let fmt_layer = tracing_subscriber::fmt::layer()
-        .compact()
-        .with_ansi(true)
-        .with_filter(filter);
+    let fmt_layer = tracing_subscriber::fmt::layer().json().with_filter(filter);
 
     let subscriber = Registry::default().with(fmt_layer);
 
@@ -45,6 +41,8 @@ pub fn init_otlp_logger(
         .add_directive("h2=error".parse().unwrap())
         .add_directive("reqwest=error".parse().unwrap());
 
+    let stdout_filter = EnvFilter::from_default_env();
+
     let mut grpc_metadata = MetadataMap::with_capacity(3);
 
     grpc_metadata.insert("authorization", token.parse()?);
@@ -53,19 +51,19 @@ pub fn init_otlp_logger(
 
     let svc_metadata = Resource::builder().with_service_name(app).build();
 
-    let logger = logs(grpc_metadata.clone(), svc_metadata.clone())?;
+    let logger = logs(grpc_metadata.clone(), svc_metadata.clone())?.with_filter(filter.clone());
 
-    let meter = metrics(grpc_metadata.clone(), svc_metadata.clone())?;
-    let tracer = tracer(app, grpc_metadata, svc_metadata)?;
+    let tracer = tracer(app, grpc_metadata, svc_metadata)?.with_filter(filter);
 
-    let stdout_logger = tracing_subscriber::fmt::layer().compact().with_ansi(true);
+    let stdout_logger = tracing_subscriber::fmt::layer()
+        .json()
+        .with_writer(std::io::stdout)
+        .with_filter(stdout_filter);
 
     let subscriber = Registry::default()
-        .with(filter)
-        .with(meter)
+        .with(stdout_logger)
         .with(tracer)
-        .with(logger)
-        .with(stdout_logger);
+        .with(logger);
 
     tracing::subscriber::set_global_default(subscriber)?;
 
@@ -90,29 +88,6 @@ fn logs(
     let logger = OpenTelemetryTracingBridge::new(&provider);
 
     Ok(logger)
-}
-
-fn metrics<S>(
-    metadata: MetadataMap,
-    resource: Resource,
-) -> Result<MetricsLayer<S, SdkMeterProvider>, Error>
-where
-    S: Subscriber + for<'a> LookupSpan<'a>,
-{
-    let exporter = MetricExporter::builder()
-        .with_tonic()
-        .with_metadata(metadata)
-        .build()
-        .map_err(|source| Error::MetricExporterError { source })?;
-
-    let provider = SdkMeterProvider::builder()
-        .with_periodic_exporter(exporter)
-        .with_resource(resource)
-        .build();
-
-    let meter: MetricsLayer<S, SdkMeterProvider> = MetricsLayer::new(provider);
-
-    Ok(meter)
 }
 
 fn tracer<S>(

@@ -6,9 +6,6 @@ use axum::middleware::Next;
 use axum::response::Response;
 use http::StatusCode;
 use metrics::histogram;
-use metrics_exporter_prometheus::PrometheusBuilder;
-
-pub use metrics_exporter_prometheus::PrometheusHandle;
 
 /// Axum middleware that tracks request duration.
 pub async fn metrics_middleware(
@@ -41,14 +38,4 @@ pub async fn metrics_middleware(
     req_duration.record(latency);
 
     response
-}
-
-/// Installs the prometheus metrics recorder and returns a handle
-/// for the `/metrics` endpoint.
-pub fn setup_prometheus() -> PrometheusHandle {
-    let builder = PrometheusBuilder::new();
-
-    builder
-        .install_recorder()
-        .expect("failed to install recorder")
 }

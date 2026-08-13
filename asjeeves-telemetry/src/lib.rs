@@ -11,7 +11,7 @@ pub mod reqwest_middleware;
 pub mod traceable_error;
 
 #[cfg(feature = "axum")]
-pub use axum_metrics::{PrometheusHandle, metrics_middleware, setup_prometheus};
+pub use axum_metrics::metrics_middleware;
 #[cfg(feature = "bb8")]
 pub use database_metrics::track_database_metrics;
 pub use database_metrics::{db_metrics_setup, time_async_query};
