@@ -6,12 +6,14 @@ homepage = "https://github.com/Ameelio/asjeeves/"
 license = "MIT"
 readme = "../README.md"
 repository = "https://github.com/Ameelio/asjeeves/"
-version = "0.1.2-alpha.7"
+version = "0.1.2-alpha.8"
 
 [features]
 axum = [
   "dep:asjeeves-csrf",
   "dep:asjeeves-user-session",
+  "telemetry",
+  "asjeeves-telemetry/axum",
   "tower"
 ]
 
