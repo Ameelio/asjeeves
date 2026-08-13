@@ -35,7 +35,7 @@ jobs:
         uses: taiki-e/install-action@cargo-llvm-cov
 
       - name: Run Coverage
-        run: cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
+        run: cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info --ignore-filename-regex "asjeeves-telemetry/src/database_metrics.rs|asjeeves-telemetry/src/axum_metrics.rs"
         env:
           TEST_REDIS_URL: redis://localhost:6379
 
