@@ -129,8 +129,8 @@ pub mod test {
     use rand_chacha::ChaCha20Rng;
     use rand_core::SeedableRng;
 
-    pub const FAT_ONE: &'static str = "mjdEUEVgY57GcLehfUkrJz4HewqWvvWLp3YHeeVEVG4=";
-    pub const FAT_TWO: &'static str = "AA7-yHxXSewRV5EuDhcfYN6eU0E0iBmi3pnxQMWaQkw=";
+    pub const FAT_ONE: &str = "mjdEUEVgY57GcLehfUkrJz4HewqWvvWLp3YHeeVEVG4=";
+    pub const FAT_TWO: &str = "AA7-yHxXSewRV5EuDhcfYN6eU0E0iBmi3pnxQMWaQkw=";
 
     #[test]
     fn it_should_create_a_token_and_cookie() {
