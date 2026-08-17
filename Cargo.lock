@@ -84,7 +84,7 @@ checksum = "03918c3dbd7701a85c6b9887732e2921175f26c350b4563841d0958c21d57e6d"
 
 [[package]]
 name = "asjeeves"
-version = "0.1.2-alpha.10"
+version = "0.1.2-alpha.11"
 dependencies = [
  "asjeeves-csrf",
  "asjeeves-dup-req-protection",
@@ -98,7 +98,7 @@ dependencies = [
 
 [[package]]
 name = "asjeeves-csrf"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "asjeeves-encryption",
  "axum",

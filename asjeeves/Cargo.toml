@@ -6,7 +6,7 @@ homepage = "https://github.com/Ameelio/asjeeves/"
 license = "MIT"
 readme = "../README.md"
 repository = "https://github.com/Ameelio/asjeeves/"
-version = "0.1.2-alpha.10"
+version = "0.1.2-alpha.11"
 
 [features]
 axum = [
@@ -54,7 +54,7 @@ tower = [
 zipstream = [ "dep:asjeeves-zipstream"]
 
 [dependencies]
-asjeeves-csrf = { version = "0.1.0", path = "../asjeeves-csrf", optional = true }
+asjeeves-csrf = { version = "0.1.1", path = "../asjeeves-csrf", optional = true }
 asjeeves-dup-req-protection = { version = "0.1.0", path = "../asjeeves-dup-req-protection", optional = true }
 asjeeves-encryption = { version = "0.1.1", workspace = true, optional = true }
 asjeeves-health-check = { version = "0.2.1", path = "../asjeeves-health-check", optional = true }

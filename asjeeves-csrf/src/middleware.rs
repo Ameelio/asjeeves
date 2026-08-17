@@ -6,9 +6,8 @@
 //!     - Add protect_from_forgery using `axum::middleware::from_fn_with_state`.
 //!     - Implement `FromRef<Rng>` for your state.
 
-use asjeeves_encryption::seed::Rng;
-use axum::extract::{Request, State};
-use axum::http::{HeaderMap, HeaderValue, Method, StatusCode, header};
+use axum::extract::Request;
+use axum::http::{HeaderMap, HeaderValue, Method, StatusCode};
 use axum::middleware::Next;
 use axum::response::Response;
 use tracing::instrument;
@@ -17,7 +16,6 @@ use crate::form_authenticity_token::FormAuthenticityToken;
 
 #[instrument(err, skip(cookie_fat))]
 pub async fn protect_against_forgery(
-    State(rng): State<Rng>,
     cookie_fat: Option<FormAuthenticityToken>,
     headers: HeaderMap,
     method: Method,
@@ -25,23 +23,6 @@ pub async fn protect_against_forgery(
     next: Next,
 ) -> Result<Response, StatusCode> {
     match method {
-        Method::GET => {
-            let mut response: Response = next.run(request).await;
-
-            let cookie: String = {
-                let mut rng = rng;
-
-                let fat = FormAuthenticityToken::generate(&mut rng);
-
-                fat.csrf_cookie().to_string()
-            };
-
-            if let Ok(hdr_val) = HeaderValue::from_str(&cookie) {
-                response.headers_mut().insert(header::SET_COOKIE, hdr_val);
-            }
-
-            Ok(response)
-        }
         Method::PUT | Method::POST | Method::DELETE => {
             let cookie_fat: FormAuthenticityToken = cookie_fat.ok_or(StatusCode::FORBIDDEN)?;
 
@@ -83,8 +64,6 @@ mod test {
     use super::*;
     use crate::form_authenticity_token::COOKIE_NAME;
     use crate::form_authenticity_token::test::{FAT_ONE, FAT_TWO};
-    use asjeeves_encryption::seed::{Rng, Seed};
-    use axum::extract::FromRef;
     use axum::http::HeaderValue;
     use axum::middleware;
     use axum::routing::{Router, put};
@@ -95,28 +74,11 @@ mod test {
         StatusCode::OK
     }
 
-    #[derive(Clone, Default, Debug)]
-    struct State {
-        seed: Seed,
-    }
-
-    impl FromRef<State> for Rng {
-        fn from_ref(input: &State) -> Self {
-            input.seed.rng()
-        }
-    }
-
     #[tokio::test]
     async fn it_should_continue_the_request_if_valid() {
-        let state = State::default();
-
-        let app =
-            Router::new()
-                .route("/", put(test_handler))
-                .layer(middleware::from_fn_with_state(
-                    state,
-                    protect_against_forgery,
-                ));
+        let app = Router::new()
+            .route("/", put(test_handler))
+            .layer(middleware::from_fn(protect_against_forgery));
 
         let server = TestServer::new(app).unwrap();
 
@@ -134,15 +96,9 @@ mod test {
 
     #[tokio::test]
     async fn it_should_halt_the_request_if_invalid() {
-        let state = State::default();
-
-        let app =
-            Router::new()
-                .route("/", put(test_handler))
-                .layer(middleware::from_fn_with_state(
-                    state,
-                    protect_against_forgery,
-                ));
+        let app = Router::new()
+            .route("/", put(test_handler))
+            .layer(middleware::from_fn(protect_against_forgery));
 
         let server = TestServer::new(app).unwrap();
 
