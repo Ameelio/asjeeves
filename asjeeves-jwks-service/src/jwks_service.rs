@@ -1,6 +1,7 @@
 use std::convert::Infallible;
 use std::fmt;
-use std::future::{Ready, ready};
+use std::future::Future;
+use std::pin::Pin;
 use std::sync::Arc;
 use std::task::{Context, Poll};
 
@@ -32,13 +33,15 @@ impl JwksService {
     }
 
     #[instrument(err)]
-    fn get_jwks_handler(&self) -> Result<Response<Full<Bytes>>, Infallible> {
-        let Ok(metadata): Result<CacheMetadata, _> = self.state.fetch_cache_metadata() else {
+    async fn get_jwks_handler(
+        state: Arc<dyn JwksState>,
+    ) -> Result<Response<Full<Bytes>>, Infallible> {
+        let Ok(metadata): Result<CacheMetadata, _> = state.fetch_cache_metadata().await else {
             return Self::error_response();
         };
 
         let body: Full<Bytes> = {
-            let Ok(jwks): Result<JsonWebKeySet, _> = self.state.fetch_client_keys() else {
+            let Ok(jwks): Result<JsonWebKeySet, _> = state.fetch_client_keys().await else {
                 return Self::error_response();
             };
 
@@ -69,11 +72,13 @@ where
 {
     type Response = Response<Full<Bytes>>;
     type Error = Infallible;
-    type Future = Ready<Result<Self::Response, Self::Error>>;
+    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send>>;
 
-    #[instrument]
+    #[instrument(skip(self))]
     fn call(&mut self, _: Request<B>) -> Self::Future {
-        ready(self.get_jwks_handler())
+        let state = self.state.clone();
+
+        Box::pin(async move { Self::get_jwks_handler(state).await })
     }
 
     fn poll_ready(&mut self, _: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
@@ -96,24 +101,36 @@ mod test {
     pub struct StateWithJwks;
 
     impl JwksState for StateWithJwks {
-        fn fetch_cache_metadata(&self) -> Result<CacheMetadata, Box<dyn std::error::Error>> {
-            let data = CacheMetadata {
-                expires: HeaderValue::from_static("2026-01-01T13:00.00Z"),
-                last_modified: HeaderValue::from_static("2026-01-01T13:00.00Z"),
-            };
+        fn fetch_cache_metadata(
+            &self,
+        ) -> Pin<
+            Box<dyn Future<Output = Result<CacheMetadata, Box<dyn std::error::Error>>> + Send + '_>,
+        > {
+            Box::pin(async {
+                let data = CacheMetadata {
+                    expires: HeaderValue::from_static("2026-01-01T13:00.00Z"),
+                    last_modified: HeaderValue::from_static("2026-01-01T13:00.00Z"),
+                };
 
-            Ok(data)
+                Ok(data)
+            })
         }
 
-        fn fetch_client_keys(&self) -> Result<JsonWebKeySet, Box<dyn std::error::Error>> {
-            let jwk = RsaWebKey::default();
-            let jwk = JsonWebKey::RS256(jwk);
-            let mut keys: HashSet<JsonWebKey> = HashSet::with_capacity(1);
-            keys.insert(jwk);
+        fn fetch_client_keys(
+            &self,
+        ) -> Pin<
+            Box<dyn Future<Output = Result<JsonWebKeySet, Box<dyn std::error::Error>>> + Send + '_>,
+        > {
+            Box::pin(async {
+                let jwk = RsaWebKey::default();
+                let jwk = JsonWebKey::RS256(jwk);
+                let mut keys: HashSet<JsonWebKey> = HashSet::with_capacity(1);
+                keys.insert(jwk);
 
-            let set = JsonWebKeySet { keys };
+                let set = JsonWebKeySet { keys };
 
-            Ok(set)
+                Ok(set)
+            })
         }
     }
 
