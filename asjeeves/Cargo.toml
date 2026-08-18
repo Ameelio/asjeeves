@@ -6,7 +6,7 @@ homepage = "https://github.com/Ameelio/asjeeves/"
 license = "MIT"
 readme = "../README.md"
 repository = "https://github.com/Ameelio/asjeeves/"
-version = "0.1.2-alpha.8"
+version = "0.1.2-alpha.10"
 
 [features]
 axum = [
@@ -54,11 +54,11 @@ tower = [
 zipstream = [ "dep:asjeeves-zipstream"]
 
 [dependencies]
-asjeeves-csrf = { version = "0.1.0-alpha.2", path = "../asjeeves-csrf", optional = true }
+asjeeves-csrf = { version = "0.1.0", path = "../asjeeves-csrf", optional = true }
 asjeeves-dup-req-protection = { version = "0.1.0", path = "../asjeeves-dup-req-protection", optional = true }
-asjeeves-encryption = { version = "0.1.1-alpha.1", workspace = true, optional = true }
-asjeeves-health-check = { version = "0.2.1-alpha.1", path = "../asjeeves-health-check", optional = true }
-asjeeves-jwks-service = { version = "0.1.3", path = "../asjeeves-jwks-service", optional = true }
-asjeeves-telemetry = { version = "0.2.0-alpha.1", path = "../asjeeves-telemetry", optional = true }
+asjeeves-encryption = { version = "0.1.1", workspace = true, optional = true }
+asjeeves-health-check = { version = "0.2.1", path = "../asjeeves-health-check", optional = true }
+asjeeves-jwks-service = { version = "0.1.4", path = "../asjeeves-jwks-service", optional = true }
+asjeeves-telemetry = { version = "0.2.0", path = "../asjeeves-telemetry", optional = true }
 asjeeves-user-session = {version = "0.1.1",  path = "../asjeeves-user-session", optional = true }
 asjeeves-zipstream = { version = "0.1.1", path = "../asjeeves-zipstream", optional = true }

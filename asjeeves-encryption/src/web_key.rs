@@ -79,10 +79,6 @@ impl PrivateKey {
             typ: "JWT".into(),
         };
 
-        let debug_info = serde_json::to_string(&claims).unwrap();
-
-        tracing::info!("unencoded token {}", debug_info);
-
         let token = Jwt::new(claims, header);
 
         self.sign_json_web_token(token)
@@ -96,12 +92,9 @@ impl PrivateKey {
     {
         let mut signing_key: SigningKey<Sha256> = SigningKey::new((*self.inner).clone());
 
-        // move this to json_web_tolkien.
         let encoded_token: String = token
             .to_string()
             .map_err(|source| Error::JwtSerializationError { source })?;
-
-        tracing::info!("encoded token {}", encoded_token);
 
         let signature: Box<[u8]> = {
             let msg: &[u8] = encoded_token.as_bytes();
