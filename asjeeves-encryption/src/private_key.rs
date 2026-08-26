@@ -21,8 +21,7 @@ use zeroize::Zeroizing;
 use crate::error::Error;
 use crate::prelude::Sensitive;
 
-pub type WebKey = PrivateKey;
-
+/// An RSA 256-bit private key.
 #[derive(Clone, PartialEq)]
 pub struct PrivateKey {
     inner: Arc<RsaPrivateKey>,
@@ -222,7 +221,7 @@ mod tests {
         let seed = Seed::from(1);
         let mut rng = seed.rng();
 
-        let key = WebKey::generate(&mut rng).unwrap();
+        let key = PrivateKey::generate(&mut rng).unwrap();
 
         let unenc = Sensitive::new(vec![1u8, 2u8].into_boxed_slice());
 

@@ -5,10 +5,11 @@ use crate::user_session_keys::UserSessionKeys;
 
 pub type Cache = redis::aio::ConnectionManager;
 
+/// Stores connection pools, keys, and configuration for [crate::user_session_service::UserSessionService].
 #[derive(Clone)]
 pub struct UserSessionState {
-    // the redis ConnectionManager can be cloned cheaply
-    // and safely.
+    /// the redis ConnectionManager can be cloned cheaply
+    /// and safely.
     pub cache: Cache,
     /// Name of the user session cookie defaults to `session-id`
     pub cookie_name: Arc<str>,

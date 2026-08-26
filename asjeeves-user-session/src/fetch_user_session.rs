@@ -12,6 +12,7 @@ use crate::user_session_state::{Cache, UserSessionState};
 
 type SessionToken = Jwt<Claims, Header>;
 
+/// Fetches user session data from redis.
 #[instrument(err)]
 pub async fn fetch_user_session<T>(cookie: Cookie<'_>, state: &UserSessionState) -> Result<T, Error>
 where

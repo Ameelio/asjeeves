@@ -6,9 +6,14 @@ use redis::aio::ConnectionLike;
 use redis::{AsyncTypedCommands, SetExpiry, SetOptions};
 use thiserror::Error;
 
+/// A simple lock stored in cache. It determines if
+/// a request is locked (i.e. already received) by the
+/// presence of a key in cache represented by this struct.
 #[derive(Clone)]
 pub struct RequestLock {
+    /// The path for the key, aka the prefix.
     path: Arc<str>,
+    /// The duration before the key should be expired.
     ttl: Arc<Duration>,
 }
 
@@ -31,6 +36,7 @@ impl RequestLock {
         Self { path, ttl }
     }
 
+    /// Verifies if this is a duplicate request by attempting to create a lock.
     pub async fn try_lock<C>(&self, conn: &mut C, nonce: &str) -> Result<(), Error>
     where
         C: ConnectionLike + AsyncTypedCommands,

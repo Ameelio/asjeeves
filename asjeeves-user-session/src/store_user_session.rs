@@ -1,5 +1,4 @@
-use asjeeves_encryption::prelude::{Jws, Jwt};
-use asjeeves_encryption::web_key::PrivateKey;
+use asjeeves_encryption::prelude::*;
 use axum::http::HeaderValue;
 use cookie::{Cookie, SameSite};
 use redis::AsyncTypedCommands;
@@ -12,6 +11,7 @@ use crate::user_session_state::{Cache, UserSessionState};
 
 type SessionToken = Jwt<Claims, Header>;
 
+/// Store session data into redis.
 #[instrument(err, skip(state, user_session))]
 pub async fn store_user_session<T>(
     state: &UserSessionState,

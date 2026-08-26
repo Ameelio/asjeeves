@@ -10,6 +10,7 @@ use crate::error::Error;
 use crate::fetch_user_session::fetch_user_session;
 use crate::user_session_state::UserSessionState;
 
+/// An axum extractor for user session data.
 #[derive(Clone)]
 pub struct UserSession<T: Clone>(pub T);
 

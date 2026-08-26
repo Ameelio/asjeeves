@@ -8,7 +8,7 @@ use crate::user_session_options::UserSessionOptions;
 use crate::user_session_service::UserSessionService;
 use crate::user_session_state::{Cache, UserSessionState};
 
-/// A middleware service that loads or stores a user_session.
+/// A middleware service that loads or stores a [UserSession].
 #[derive(Clone)]
 pub struct UserSessionLayer {
     pub cache: Cache,
@@ -16,7 +16,6 @@ pub struct UserSessionLayer {
     pub options: UserSessionOptions,
     /// Private Keys for signing and verifying
     pub private_keys: UserSessionKeys,
-    /// axum State, see `axum::extract::State`.
     /// Time to live for the user session date.
     pub ttl: TimeDelta,
 }

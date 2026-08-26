@@ -1,5 +1,5 @@
 //! # User Sessions
-//!
+//! Middlware that handles extraction and storing of user session data.
 //!
 //! ## Example
 //!     use std::env;

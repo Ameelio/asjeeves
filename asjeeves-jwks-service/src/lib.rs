@@ -1,3 +1,5 @@
+//! A [tower::Service][tower] to render a `jwks` JSON response.
+
 mod jwks_service;
 mod jwks_state;
 

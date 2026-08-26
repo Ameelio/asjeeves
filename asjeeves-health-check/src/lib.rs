@@ -1,5 +1,20 @@
-//! Basic [tower::Service] that returns a 200 OK response.
+//! Basic [tower::Service][tower] that returns a 200 OK response.
 //! indicating this service is Healthy.
+//!
+//! ## Example
+//! Using axum.
+//! ```
+//! use asjeeves_health_check::HealthCheck;
+//! use axum::Router;
+//!
+//! #[derive(Clone)]
+//! struct WebState {}
+//!
+//! let app : Router<WebState> = Router::new()
+//!     .route_service("/health", HealthCheck {})
+//!     .with_state(WebState {});
+//!
+//! ```
 
 use std::convert::Infallible;
 use std::future::Ready;

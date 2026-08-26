@@ -3,8 +3,8 @@ use std::task::{Context, Poll};
 
 use axum::body::Body;
 use axum::extract::Request;
-use axum::http::header::SET_COOKIE;
 use axum::http::Response;
+use axum::http::header::SET_COOKIE;
 use axum::response::IntoResponse;
 use tower::Service;
 
@@ -12,6 +12,11 @@ use crate::store_user_session::store_user_session;
 use crate::user_session::UserSession;
 use crate::user_session_state::UserSessionState;
 
+/// [tower] middleware that can:
+/// - Provide a [UserSession] if a cookie exists, it can then be extracted
+///   by the inner [Service].
+/// - Add a session cookie if [UserSession] returned by an inner [Service] such as
+///   an axum handler.
 #[derive(Clone)]
 pub struct UserSessionService<InnerService> {
     pub(crate) inner: InnerService,

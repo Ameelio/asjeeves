@@ -11,8 +11,9 @@ use tracing::instrument;
 use zeroize::Zeroizing;
 
 use crate::error::Error;
-use crate::web_key::WebKey;
+use crate::private_key::PrivateKey;
 
+/// AES 256-bit key used to encrypt RSA 256-bit private keys.
 #[derive(Clone, Deserialize, Eq, PartialEq)]
 #[serde(try_from = "String")]
 pub struct KeyEncryptionKey(Arc<aes_gcm::Key<Aes256Gcm>>);
@@ -40,7 +41,7 @@ impl KeyEncryptionKey {
     }
 
     #[instrument]
-    pub fn encrypt_key<R>(&self, key: &WebKey, rng: &mut R) -> Result<EncryptedKey, Error>
+    pub fn encrypt_key<R>(&self, key: &PrivateKey, rng: &mut R) -> Result<EncryptedKey, Error>
     where
         R: CryptoRng + RngCore + Debug,
     {
@@ -69,7 +70,12 @@ impl KeyEncryptionKey {
     }
 
     #[instrument(skip(enc_key, nonce))]
-    pub fn decrypt_key(&self, enc_key: &[u8], key_id: &str, nonce: &[u8]) -> Result<WebKey, Error> {
+    pub fn decrypt_key(
+        &self,
+        enc_key: &[u8],
+        key_id: &str,
+        nonce: &[u8],
+    ) -> Result<PrivateKey, Error> {
         let cipher = Aes256Gcm::new(&self.0);
         let nonce = Nonce::from_slice(nonce);
 
@@ -81,7 +87,7 @@ impl KeyEncryptionKey {
 
         let key_id: Arc<str> = key_id.into();
 
-        let web_key = WebKey::from_bytes(dec_key, key_id)?;
+        let web_key = PrivateKey::from_bytes(dec_key, key_id)?;
 
         Ok(web_key)
     }
@@ -129,7 +135,7 @@ mod test {
         let seed = Seed::from(1);
         let mut rng: Rng = seed.rng();
 
-        let web_key = WebKey::generate(&mut rng).unwrap();
+        let web_key = PrivateKey::generate(&mut rng).unwrap();
         let kek = KeyEncryptionKey::generate(&mut rng);
 
         let payload = kek.encrypt_key(&web_key, &mut rng).unwrap();
