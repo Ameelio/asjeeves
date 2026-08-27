@@ -1,11 +1,3 @@
-//! CSRF middleware
-//!     - Adds a CSRF cookie on GET requests
-//!     - Execpects a CSRF cookie and matches it on DELETE/POST/PUT requests.
-//!
-//! ## Setup
-//!     - Add protect_from_forgery using `axum::middleware::from_fn_with_state`.
-//!     - Implement `FromRef<Rng>` for your state.
-
 use axum::extract::Request;
 use axum::http::{HeaderMap, HeaderValue, Method, StatusCode};
 use axum::middleware::Next;
@@ -14,6 +6,8 @@ use tracing::instrument;
 
 use crate::form_authenticity_token::FormAuthenticityToken;
 
+/// CSRF middleware
+/// - Execpects a CSRF cookie and matches it on DELETE/POST/PUT requests.
 #[instrument(err, skip(cookie_fat))]
 pub async fn protect_against_forgery(
     cookie_fat: Option<FormAuthenticityToken>,
@@ -67,8 +61,8 @@ mod test {
     use axum::http::HeaderValue;
     use axum::middleware;
     use axum::routing::{Router, put};
-    use axum_extra::extract::cookie::Cookie;
     use axum_test::TestServer;
+    use cookie::Cookie;
 
     async fn test_handler() -> StatusCode {
         StatusCode::OK
@@ -80,7 +74,7 @@ mod test {
             .route("/", put(test_handler))
             .layer(middleware::from_fn(protect_against_forgery));
 
-        let server = TestServer::new(app).unwrap();
+        let server = TestServer::new(app);
 
         let client_csrf = HeaderValue::from_static(FAT_ONE);
         let cookie = Cookie::new(COOKIE_NAME, FAT_ONE);
@@ -100,7 +94,7 @@ mod test {
             .route("/", put(test_handler))
             .layer(middleware::from_fn(protect_against_forgery));
 
-        let server = TestServer::new(app).unwrap();
+        let server = TestServer::new(app);
 
         let client_csrf = HeaderValue::from_static(FAT_ONE);
         let cookie = Cookie::new(COOKIE_NAME, FAT_TWO);

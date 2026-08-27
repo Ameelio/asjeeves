@@ -42,8 +42,8 @@ impl SignatureVerification for JsonWebKey {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::private_key::PrivateKey;
     use crate::seed::Seed;
-    use crate::web_key::WebKey;
     use rsa::RsaPrivateKey;
     use rsa::pkcs1v15::SigningKey;
     use rsa::sha2::Sha256;
@@ -66,7 +66,7 @@ mod tests {
     fn create_test_key_and_jwk() -> (RsaPrivateKey, JsonWebKey) {
         let seed = Seed::from(1);
         let mut rng = seed.rng();
-        let web_key = WebKey::generate(&mut rng).expect("Failed to generate web key");
+        let web_key = PrivateKey::generate(&mut rng).expect("Failed to generate web key");
         let jwk = web_key.to_json_web_key();
 
         // Extract private key for signing

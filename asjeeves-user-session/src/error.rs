@@ -6,6 +6,7 @@ use axum::{
 };
 use thiserror::Error;
 
+/// User Session Error
 #[derive(Debug, Error)]
 pub enum Error {
     #[error("this should never happen, infallible does not fail")]

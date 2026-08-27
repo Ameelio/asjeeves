@@ -1,10 +1,11 @@
 use std::fmt;
 use std::sync::Arc;
 
-use asjeeves_encryption::web_key::PrivateKey;
+use asjeeves_encryption::prelude::*;
 
 use crate::error::Error;
 
+/// A thread safe list of [PrivateKey].
 // We use a newtype here so we can extract it from a state using FromRef.
 #[derive(Clone)]
 pub struct UserSessionKeys(pub Arc<[PrivateKey]>);
