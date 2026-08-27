@@ -56,7 +56,7 @@ zipstream = [ "dep:asjeeves-zipstream"]
 [dependencies]
 asjeeves-csrf = { version = "0.1.2", path = "../asjeeves-csrf", optional = true }
 asjeeves-dup-req-protection = { version = "0.1.1", path = "../asjeeves-dup-req-protection", optional = true }
-asjeeves-encryption = { version = "0.1.1", workspace = true, optional = true }
+asjeeves-encryption = { version = "0.1.2", workspace = true, optional = true }
 asjeeves-health-check = { version = "0.2.2", path = "../asjeeves-health-check", optional = true }
 asjeeves-jwks-service = { version = "0.1.5", path = "../asjeeves-jwks-service", optional = true }
 asjeeves-telemetry = { version = "0.2.0", path = "../asjeeves-telemetry", optional = true }
