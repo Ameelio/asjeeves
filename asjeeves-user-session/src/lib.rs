@@ -169,6 +169,21 @@ mod test {
     async fn it_should_extract_a_user_session() {
         let state: TestState = test_state().await;
 
+        fn html_escape(input: &str) -> String {
+            let mut escaped = String::with_capacity(input.len());
+            for c in input.chars() {
+                match c {
+                    '&' => escaped.push_str("&amp;"),
+                    '<' => escaped.push_str("&lt;"),
+                    '>' => escaped.push_str("&gt;"),
+                    '"' => escaped.push_str("&quot;"),
+                    '\'' => escaped.push_str("&#x27;"),
+                    _ => escaped.push(c),
+                }
+            }
+            escaped
+        }
+
         #[axum::debug_handler]
         async fn post_session(
             State(_state): State<TestState>,
@@ -187,7 +202,8 @@ mod test {
             UserSession(session): UserSession<MockInner>,
             State(_state): State<TestState>,
         ) -> (StatusCode, Html<String>) {
-            let body = Html(format!("<p>{}</p>", session.name));
+            let name = html_escape(&session.name);
+            let body = Html(format!("<p>{}</p>", name));
 
             (StatusCode::OK, body)
         }

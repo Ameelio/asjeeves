@@ -98,7 +98,12 @@ mod test {
 
         let req_lock = RequestLock::new("foo", ttl);
 
+        // codeql[rust/hard-coded-cryptographic-value] - this is a test-only mock value
+        // lgtm[rust/hard-coded-cryptographic-value]
         assert_eq!(Ok(()), req_lock.try_lock(&mut conn, "foo").await);
+
+        // codeql[rust/hard-coded-cryptographic-value] - this is a test-only mock value
+        // lgtm[rust/hard-coded-cryptographic-value]
         assert_eq!(
             Err(Error::AlreadyLocked),
             req_lock.try_lock(&mut conn, "foo").await

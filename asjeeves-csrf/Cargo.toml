@@ -6,7 +6,7 @@ homepage = "https://github.com/Ameelio/asjeeves/"
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/Ameelio/asjeeves/"
-version = "0.1.2"
+version = "0.1.3"
 
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ["cfg(coverage_nightly)"] }
@@ -18,6 +18,7 @@ unexpected_cfgs = { level = "warn", check-cfg = ["cfg(coverage_nightly)"] }
 # This crate is for middleware used by Axum
 # #########################################
 axum.workspace = true
+bytes.workspace = true
 cookie = { workspace = true, features = ["percent-encode"]}
 
 # #########################################
@@ -32,6 +33,11 @@ base64ct.workspace = true
 rand_chacha.workspace = true
 rand_core.workspace = true
 asjeeves-encryption.workspace = true
+
+# #########################################
+# Avoid CVE-2026-25727
+# #########################################
+time = "^0.3.47"
 
 # #########################################
 # Instrumentation and Logging
