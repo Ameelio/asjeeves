@@ -18,7 +18,7 @@ unexpected_cfgs = { level = "warn", check-cfg = ["cfg(coverage_nightly)"] }
 # This crate is for middleware used by Axum
 # #########################################
 axum.workspace = true
-cookie.workspace = true
+cookie = { workspace = true, features = ["percent-encode"]}
 
 # #########################################
 # Format conversion
