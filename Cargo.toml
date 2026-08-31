@@ -117,7 +117,7 @@ reqwest-tracing = "0.7.1"
 # RSA / SHA 256 Algorithm
 # Used for: Json Web Keys and Tokens
 # #########################################
-rsa = { version = "0.9", features = ["sha2"] }
+rsa = { version = "^0.9.10", features = ["sha2"] }
 
 # #########################################
 # Format conversion
@@ -167,4 +167,4 @@ zeroize = { version = "1.8.2", features = ["serde"] }
 # #########################################
 # Internal subcrates
 # #########################################
-asjeeves-encryption = { version = "0.1.2", path = "./asjeeves-encryption" }
+asjeeves-encryption = { version = "0.1.3", path = "./asjeeves-encryption" }

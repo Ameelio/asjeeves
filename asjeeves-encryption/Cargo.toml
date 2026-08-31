@@ -6,7 +6,7 @@ homepage = "https://github.com/Ameelio/asjeeves/"
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/Ameelio/asjeeves/"
-version = "0.1.2"
+version = "0.1.3"
 
 [dependencies]
 
@@ -45,6 +45,11 @@ uuid.workspace = true
 # Session Cookies
 # #########################################################
 cookie.workspace = true
+
+# #########################################
+# Avoid CVE-2026-25727
+# #########################################
+time = "^0.3.47"
 
 # #########################################################
 # Instrumentation & Errors
